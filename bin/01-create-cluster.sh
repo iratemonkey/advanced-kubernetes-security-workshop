@@ -28,7 +28,7 @@ set -eEuo pipefail
 gcloud iam service-accounts create "my-node-sa" \
   --project "${PROJECT_ID}"
 
-for role in "logging.logWriter" "monitoring.metricWriter" "monitoring.viewer" "iam.serviceAccountTokenCreator"; do
+for role in "logging.logWriter" "monitoring.metricWriter" "monitoring.viewer" "stackdriver.resourceMetadata.writer" "cloudtrace.agent" "iam.serviceAccountTokenCreator"; do
   gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
     --member "serviceAccount:my-node-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
     --role "roles/${role}"
@@ -55,7 +55,7 @@ gcloud compute networks subnets create "my-subnet-us-central1-192" \
 gcloud iam service-accounts create "my-bastion-sa" \
   --project "${PROJECT_ID}"
 
-for role in "editor" "container.admin" "iam.serviceAccountAdmin"; do
+for role in "owner" "container.admin" "iam.serviceAccountAdmin"; do
   gcloud projects add-iam-policy-binding "${PROJECT_ID}" \
     --member "serviceAccount:my-bastion-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
     --role "roles/${role}"
@@ -142,8 +142,8 @@ gcloud beta container clusters create "my-cluster" \
   --project "${PROJECT_ID}" \
   --region "us-central1" \
   --num-nodes "1" \
-  --node-version "1.14.6" \
-  --cluster-version "1.14.6" \
+  --node-version "1.15" \
+  --cluster-version "1.15" \
   --machine-type "n1-standard-2" \
   --image-type "cos_containerd" \
   --network "my-network" \
@@ -172,19 +172,19 @@ gcloud beta container clusters create "my-cluster" \
   --metadata "disable-legacy-endpoints=true" \
   --maintenance-window "2:00"
 
-gcloud beta container node-pools create sandboxed \
-  --project "${PROJECT_ID}" \
-  --cluster "my-cluster" \
-  --region "us-central1" \
-  --num-nodes "1" \
-  --node-version "1.14.6" \
-  --machine-type "n1-standard-2" \
-  --image-type "cos_containerd" \
-  --sandbox "type=gvisor" \
-  --service-account "my-node-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
-  --workload-metadata-from-node "GKE_METADATA_SERVER" \
-  --scopes "cloud-platform" \
-  --metadata "disable-legacy-endpoints=true"
+# gcloud beta container node-pools create sandboxed \
+#   --project "${PROJECT_ID}" \
+#   --cluster "my-cluster" \
+#   --region "us-central1" \
+#   --num-nodes "1" \
+#   --node-version "1.15" \
+#   --machine-type "n1-standard-2" \
+#   --image-type "cos_containerd" \
+#   --sandbox "type=gvisor" \
+#   --service-account "my-node-sa@${PROJECT_ID}.iam.gserviceaccount.com" \
+#   --workload-metadata-from-node "GKE_METADATA_SERVER" \
+#   --scopes "cloud-platform" \
+#   --metadata "disable-legacy-endpoints=true"
 
 #
 # The following options can be added to further increase cluster security. They

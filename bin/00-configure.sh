@@ -24,7 +24,6 @@ gcloud services enable --project "${PROJECT_ID}" \
   binaryauthorization.googleapis.com \
   cloudbuild.googleapis.com \
   cloudkms.googleapis.com \
-  cloudmonitoring.googleapis.com \
   cloudresourcemanager.googleapis.com \
   cloudshell.googleapis.com \
   compute.googleapis.com \
