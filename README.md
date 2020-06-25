@@ -55,8 +55,6 @@ GKE's best practices with respect to security.
 1.  Explore cluster:
 
     ```text
-    kubectl get po
-
     kubectl get po -n kube-system
     ```
 
